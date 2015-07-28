@@ -27,6 +27,31 @@ Qva.LoadScript(template_path + 'tinydropdown.js', function () {
 				
             if (this.Layout.visible) {
 
+				// var divStatusLine = document.getElementById("div_StatusLine");
+				// if (!divStatusLine) {
+				// 	var divStatusLine = document.createElement("div");
+				// 	divStatusLine.setAttribute("id", "div_StatusLine");
+				// 	element.appendChild(divStatusLine);
+				// 	divStatusLine.className = "statusLine";
+				// 	//var message = Qv.GetCurrentDocument().GetVariable("vU.Environment");
+				// 	var qvDoc = Qv.GetCurrentDocument();
+				// 	var span = document.createElement("span");
+				// 	span.setAttribute("id", "span_ReloadDate");
+				// 	span.innerHTML= "Test";
+				// 	element.appendChild(span);
+				// 	span.className = "statusMessage";
+				// 	var mydoc = Qv.GetCurrentDocument();
+				//     mydoc.GetAllVariables(function(vars) {
+			 //        for (var i = 0; i < vars.length; i++) {
+			 //            var obj = vars[i];
+			 //            if (obj.name == "vG.ReloadDate") {
+			 //            	span.innerHTML = obj.text;
+			 //            }
+			 //          }
+    // 				});
+				// }
+
+
 				var divMenu = document.getElementById("div_Menu");
 				if (!divMenu) {
 					var divMenu = document.createElement("div");
@@ -45,12 +70,13 @@ Qva.LoadScript(template_path + 'tinydropdown.js', function () {
                    
                 var tabdata = this.Layout.value;
                 var tabelem = mainMenuElem.getElementsByTagName("li");
+                var slice = Array.prototype.slice;
+                tabelem = slice.call(tabelem);
 					
                 var cnt = Math.max(tabdata.length, tabelem.length);
                 for (var i = 0; i < cnt; i++) {
                     if (!tabdata[i] && !tabelem[i]) 
                         continue;
-						
 					// get the content of the parameters, this is the text in between the characters % and %
 					// 3 variables are filled here 
 					// 		parentSheetID = QlikView object ID of the parent menu item
@@ -101,7 +127,8 @@ Qva.LoadScript(template_path + 'tinydropdown.js', function () {
 					}							
 
                     if (!tabelem[i]) {
-                        tabelem[i] = document.createElement("li");
+                    	var liToAdd = document.createElement("li");
+                        tabelem[i] = liToAdd;
 						tabelem[i].setAttribute("id", tabdata[i].name.replace("\\", "_"));
 							
 						if(isMainMenuItem) {
@@ -140,7 +167,7 @@ Qva.LoadScript(template_path + 'tinydropdown.js', function () {
 						
 						// because menu elements are nested the onclick event from the parent menu is inherited automatically. 
 						// Prevent execution of the onclick from the parent menu item here
-						addEvent(tabelem[i], "click", function() {
+						addEvent(tabelem[i], "click", function(e) {
                             if (!e) var e = window.event;
                             e.cancelBubble = true;
                             if (e.stopPropagation) e.stopPropagation();	
